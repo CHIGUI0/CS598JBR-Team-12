@@ -7,5 +7,5 @@
 - [Team member4], [NetID]
 
 ## Link of Google Colab Notebook
-- MP1 - [link]([URL](https://colab.research.google.com/drive/1MNNiWj7XylP3aUmmeknetVfzpAXGBlDS?usp=sharing))
+- MP1 - [link](https://colab.research.google.com/drive/1MNNiWj7XylP3aUmmeknetVfzpAXGBlDS?usp=sharing)
 - ...
