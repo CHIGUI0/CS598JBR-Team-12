@@ -2,7 +2,7 @@ import jsonlines
 import sys
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
-
+import re
 #####################################################
 # Please finish all TODOs in this file for MP2;
 #####################################################
@@ -13,22 +13,63 @@ def save_file(content, file_path):
 
 def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct", vanilla = True):
     print(f"Working with {model_name} prompt type {vanilla}...")
-    
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
     # TODO: download the model
     # TODO: load the model with quantization
+    model = AutoModelForCausalLM.from_pretrained(
+        pretrained_model_name_or_path=model_name,
+        load_in_4bit=True,
+        device_map='auto',
+        # max_memory=max_memory,
+        torch_dtype=torch.bfloat16,
+        quantization_config=BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type='nf4'
+        ),)
     
     results = []
     for entry in dataset:
         # TODO: create prompt for the model
         # Tip : Use can use any data from the dataset to create 
         #       the prompt including prompt, canonical_solution, test, etc.
-        prompt = ""
+        prefix = 'You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.'
+        # if exists "=="
+        matches_with_equals = re.findall(r"candidate\((.*?)\) == (.*?)\n", entry['test'])
+        # if not exists "=="
+        matches_without_equals = re.findall(r"assert\s+not\s+candidate\((.*?)\)\n|assert\s+candidate\((.*?)\)\n", entry['test'])
+        result_list = []
+        for match in matches_with_equals:
+            result_list.append((match[0].strip(), match[1].strip()))
+
+        for match in matches_without_equals:
+            if match[0]:
+                result_list.append((match[0].strip(), False))  # not => False
+            else:
+                result_list.append((match[1].strip(), True))  # without not => True
+        
+        inp = result_list[0][0]
+        Instruction = '\n### Instruction:\nIf the string is '+inp+' , what will the following code return?'
+        outputins='\nThe return value prediction must be enclosed between [Output] and [/Output] tags. For example : [Output]prediction[/Output].'
+        prompt = prefix + Instruction + outputins + entry['prompt']+entry['canonical_solution']+'\n### Response:'
+        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
         
         # TODO: prompt the model and get the response
-        response = ""
+        output = model.generate(input_ids, max_length=500, num_return_sequences=1)
+        response = tokenizer.decode(output[0], skip_special_tokens=True, temperature=0)
 
         # TODO: process the response and save it to results
-        verdict = False
+        matches = re.findall(r"\[Output\](.*?)\[/Output\]", response)
+        out=''
+        if matches != []:
+          out = matches[-1]
+        print(result_list[0][1])
+        print(out)
+        verdict = (result_list[0][1] == out)
 
         print(f"Task_ID {entry['task_id']}:\nprompt:\n{prompt}\nresponse:\n{response}\nis_correct:\n{verdict}")
         results.append({
