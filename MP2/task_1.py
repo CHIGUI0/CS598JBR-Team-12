@@ -49,11 +49,16 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
                 result_list.append((match[0].strip(), False))  # not => False
             else:
                 result_list.append((match[1].strip(), True))  # without not => True
-        
-        inp = result_list[0][0]
+        import random
+        random.seed(43)
+        index = random.randint(0, len(result_list)-1)
+        inp = result_list[index][0]
         Instruction = '\n### Instruction:\nIf the string is '+inp+' , what will the following code return?'
         outputins='\nThe return value prediction must be enclosed between [Output] and [/Output] tags. For example : [Output]prediction[/Output].'
-        prompt = prefix + Instruction + outputins + entry['prompt']+entry['canonical_solution']+'\n### Response:'
+        pattern = r"'''(.*?)'''"
+        # Substitute the matched text with an empty string
+        cleaned_solution = re.sub(pattern, '', entry['canonical_solution'], flags=re.DOTALL)
+        prompt = prefix + Instruction + outputins + entry['prompt']+cleaned_solution+'\n### Response:'
         
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
@@ -67,9 +72,7 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
         out=''
         if matches != []:
           out = matches[-1]
-        print(result_list[0][1])
-        print(out)
-        verdict = (result_list[0][1] == out)
+        verdict = (result_list[index][1] == out)
 
         print(f"Task_ID {entry['task_id']}:\nprompt:\n{prompt}\nresponse:\n{response}\nis_correct:\n{verdict}")
         results.append({
