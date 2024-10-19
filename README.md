@@ -8,4 +8,5 @@
 
 ## Link of Google Colab Notebook
 - MP1 - [link](https://colab.research.google.com/drive/1MNNiWj7XylP3aUmmeknetVfzpAXGBlDS?usp=sharing)
+- MP2 - [link](URL)
 - ...

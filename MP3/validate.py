@@ -1,3 +1,4 @@
+import sys
 import os
 import re
 import json
@@ -16,10 +17,10 @@ def print_message(level="info", message=""):
     color_code = color_codes.get(level, Fore.RESET)
     print(f"{color_code}{message}{Style.RESET_ALL}")
 
-def extract_seed_from_selected_file(mp2_dir):
+def extract_seed_from_selected_file(mp3_dir):
     """Extract seed value from selected_humaneval_[seed].jsonl file."""
     seed_file_pattern = r"selected_humaneval_(\d+)\.jsonl"
-    for file in os.listdir(mp2_dir):
+    for file in os.listdir(mp3_dir):
         match = re.match(seed_file_pattern, file)
         if match:
             seed_value = match.group(1)
@@ -69,35 +70,39 @@ def validate_repo(repo_name):
         print_message("error", "Validation failed: README.md is missing!")
         missing_files.append(readme_file)
 
-    mp2_dir = os.path.join(repo_name, "MP2")
-    if not os.path.exists(mp2_dir):
-        print_message("error", "Validation failed: MP2 directory is missing!")
+    mp3_dir = os.path.join(repo_name, "MP3")
+    if not os.path.exists(mp3_dir):
+        print_message("error", "Validation failed: MP3 directory is missing!")
         return False
 
-    seed_value = extract_seed_from_selected_file(mp2_dir)
+    seed_value = extract_seed_from_selected_file(mp3_dir)
     if not seed_value:
         return False
 
     jsonl_files_with_seed = [
-        f"task_1_{seed_value}_vanilla.jsonl",
-        f"task_1_{seed_value}_crafted.jsonl",
+        f"selected_humanevalpack_{seed_value}.jsonl",
         f"task_2_{seed_value}_vanilla.jsonl",
         f"task_2_{seed_value}_crafted.jsonl",
+        f"selected_humanevalx_python_{seed_value}.jsonl",
+        f"selected_humanevalx_java_{seed_value}.jsonl",
+        f"task_1_{seed_value}_vanilla.jsonl",
+        f"task_1_{seed_value}_crafted.jsonl",
     ]
 
     required_files = [
         "task_1.py",
+        "task_2.py",
+        "humanevalx_dataset_generation.log",
         "task_1_vanilla.log",
         "task_1_crafted.log",
-        "task_2.py",
         "task_2_vanilla.log",
         "task_2_crafted.log",
-        "Coverage",
+        "humanevalpack_dataset_generation.log",
     ]
 
     all_required_files = required_files + jsonl_files_with_seed
     for file in all_required_files:
-        file_path = os.path.join(mp2_dir, file)
+        file_path = os.path.join(mp3_dir, file)
         if not os.path.exists(file_path):
             missing_files.append(file)
         else:
@@ -134,20 +139,23 @@ def validate_jsonl_entries(file_path, expected_entries=20):
         return False
 
 def validate_jsonl_files(repo_name):
-    mp2_dir = os.path.join(repo_name, "MP2")
-    seed_value = extract_seed_from_selected_file(mp2_dir)
+    mp3_dir = os.path.join(repo_name, "MP3")
+    seed_value = extract_seed_from_selected_file(mp3_dir)
     if not seed_value:
         return False
 
     jsonl_files_with_seed = [
-        f"task_1_{seed_value}_vanilla.jsonl",
-        f"task_1_{seed_value}_crafted.jsonl",
+        f"selected_humanevalpack_{seed_value}.jsonl",
         f"task_2_{seed_value}_vanilla.jsonl",
         f"task_2_{seed_value}_crafted.jsonl",
+        f"selected_humanevalx_python_{seed_value}.jsonl",
+        f"selected_humanevalx_java_{seed_value}.jsonl",
+        f"task_1_{seed_value}_vanilla.jsonl",
+        f"task_1_{seed_value}_crafted.jsonl",
     ]
 
     for file in jsonl_files_with_seed:
-        file_path = os.path.join(mp2_dir, file)
+        file_path = os.path.join(mp3_dir, file)
         if not validate_jsonl_entries(file_path):
             return False
 
