@@ -37,12 +37,15 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
         #       the prompt including prompt, canonical_solution, test, etc.
         prefix = 'You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.'
         # if exists "=="
-        matches_with_equals = re.findall(r"candidate\((.*?)\) == (.*?)\n", entry['test'])
+        matches_with_equals = re.findall(r"candidate\((.*?)\) == (.*?)\n|candidate\((.*?)\) == (.*?), \"", entry['test'])
         # if not exists "=="
         matches_without_equals = re.findall(r"assert\s+not\s+candidate\((.*?)\)\n|assert\s+candidate\((.*?)\)\n", entry['test'])
         result_list = []
         for match in matches_with_equals:
+          if match[0]:
             result_list.append((match[0].strip(), match[1].strip()))
+          else:
+            result_list.append((match[2].strip(), match[3].strip()))
 
         for match in matches_without_equals:
             if match[0]:
@@ -53,27 +56,37 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
         random.seed(43)
         index = random.randint(0, len(result_list)-1)
         inp = result_list[index][0]
-        Instruction = '\n### Instruction:\nIf the string is '+inp+' , what will the following code return?'
+        Instruction = '\n### Instruction:\nIf the string is ' + inp + ', what will the following code return?'
+        Instruction_crafted = "\nYou are given a Python function and an input. You should reason the code step by step and format the correct output in [Output] and [/Output] tags, such as [Output]prediction[/Output]. Here is an example:\n"
+        Example = "### Example:\nIf the input is 2, 6, what will the following code return? Format the output as [Output]prediction[/Output]!\ndef odd_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the odd digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(1, 5) => [1, 3, 5]\n    \"\"\"\n    lower = max(1, min(a, b))\n    upper = min(9, max(a, b))\n\n    return [i for i in range(lower, upper+1) if i % 2 == 1]\n"
+        Example_res = "### Response:\nLet's reason the code step by step.\n1. Within the function, a is initially 2, b is initially 6.\n2. After calculation, lower is 2 and upper is 6.\n3. The return value is [3, 5], therefore the output is: [Output][3, 5][/Output].\n"
+        NewProblem = '### New Problem:\nIf the input is ' + inp + ', what will the following code return? Format the output as [Output]prediction[/Output]!\n'
         outputins='\nThe return value prediction must be enclosed between [Output] and [/Output] tags. For example : [Output]prediction[/Output].'
-        pattern = r"'''(.*?)'''"
-        # Substitute the matched text with an empty string
-        cleaned_solution = re.sub(pattern, '', entry['canonical_solution'], flags=re.DOTALL)
-        prompt = prefix + Instruction + outputins + entry['prompt']+cleaned_solution+'\n### Response:'
+        pattern_single = r"'''(.*?)'''"
+        pattern_double = r'"""(.*?)"""'
+        cleaned_prompt = re.sub(pattern_single, '', entry['prompt'], flags=re.DOTALL)
+        cleaned_prompt = re.sub(pattern_double, '', cleaned_prompt, flags=re.DOTALL)
+        prompt = prefix + Instruction + outputins + cleaned_prompt + entry['canonical_solution'] + '### Response:'
+        if vanilla == False:
+            prompt = prefix + Instruction_crafted + Example + Example_res + NewProblem + entry['prompt'] + entry['canonical_solution'] + '### Response:'
         
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
         
         # TODO: prompt the model and get the response
-        output = model.generate(input_ids, max_length=500, num_return_sequences=1)
+        output = model.generate(input_ids, max_length=5000, num_return_sequences=1)
         response = tokenizer.decode(output[0], skip_special_tokens=True, temperature=0)
 
         # TODO: process the response and save it to results
         matches = re.findall(r"\[Output\](.*?)\[/Output\]", response)
-        out=''
+        out = ''
         if matches != []:
-          out = matches[-1]
-        verdict = (result_list[index][1] == out)
-
+          out = str(matches[-1]).replace(' ','').replace("'",'"')
+        real = str(result_list[index][1]).replace(' ','').replace("'",'"')
+        if real[0] != '[' and real[0] != '(':
+            real = real.split(',"')[0]
+        verdict = (real == out)
+        
         print(f"Task_ID {entry['task_id']}:\nprompt:\n{prompt}\nresponse:\n{response}\nis_correct:\n{verdict}")
         results.append({
             "task_id": entry["task_id"],
@@ -81,7 +94,7 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
             "response": response,
             "is_correct": verdict
         })
-        
+        print('pred: '+out+'    real: '+real)
     return results
 
 def read_jsonl(file_path):
