@@ -12,7 +12,7 @@ def run_pytest(file_path):
     """运行pytest测试并根据结果生成覆盖率报告或返回错误标识"""
     # 构建测试命令
     test_command = f"pytest {file_path.replace('func', 'test')}.py"
-    coverage_command = f"pytest --cov={file_path} --cov-report json:{file_path}_report.json {file_path.replace('func', 'test')}.py"
+    coverage_command = f"pytest --cov={file_path} --cov-report json:{file_path.replace('func_', '')}_test.json {file_path.replace('func', 'test')}.py"
 
     # 执行pytest测试
     try:
@@ -26,7 +26,7 @@ def run_pytest(file_path):
 
     # 如果测试成功，解析覆盖率报告
     try:
-        with open(f"{file_path}_report.json", "r") as f:
+        with open(f"{file_path.replace('func_', '')}_test.json", "r") as f:
             data = json.load(f)
         covered = data["files"][f"{file_path}.py"]["summary"]["percent_covered"]
         return covered
