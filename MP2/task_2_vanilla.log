@@ -33,12 +33,17 @@ CUDA SETUP: CUDA runtime path found: /usr/local/cuda/lib64/libcudart.so
 CUDA SETUP: Highest compute capability among GPUs detected: 7.5
 CUDA SETUP: Detected CUDA version 122
 CUDA SETUP: Loading binary /usr/local/lib/python3.10/dist-packages/bitsandbytes/libbitsandbytes_cuda122.so...
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:56<00:56, 56.64s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:16<00:00, 34.73s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:16<00:00, 38.02s/it]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:56<00:56, 56.64s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [01:16<00:00, 34.73s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [01:16<00:00, 38.02s/it]
 Some weights of LlamaForCausalLM were not initialized from the model checkpoint at deepseek-ai/deepseek-coder-6.7b-instruct and are newly initialized: ['model.layers.20.self_attn.rotary_emb.inv_freq', 'model.layers.6.self_attn.rotary_emb.inv_freq', 'model.layers.7.self_attn.rotary_emb.inv_freq', 'model.layers.0.self_attn.rotary_emb.inv_freq', 'model.layers.3.self_attn.rotary_emb.inv_freq', 'model.layers.25.self_attn.rotary_emb.inv_freq', 'model.layers.31.self_attn.rotary_emb.inv_freq', 'model.layers.23.self_attn.rotary_emb.inv_freq', 'model.layers.5.self_attn.rotary_emb.inv_freq', 'model.layers.15.self_attn.rotary_emb.inv_freq', 'model.layers.26.self_attn.rotary_emb.inv_freq', 'model.layers.19.self_attn.rotary_emb.inv_freq', 'model.layers.30.self_attn.rotary_emb.inv_freq', 'model.layers.28.self_attn.rotary_emb.inv_freq', 'model.layers.22.self_attn.rotary_emb.inv_freq', 'model.layers.12.self_attn.rotary_emb.inv_freq', 'model.layers.10.self_attn.rotary_emb.inv_freq', 'model.layers.29.self_attn.rotary_emb.inv_freq', 'model.layers.9.self_attn.rotary_emb.inv_freq', 'model.layers.8.self_attn.rotary_emb.inv_freq', 'model.layers.11.self_attn.rotary_emb.inv_freq', 'model.layers.13.self_attn.rotary_emb.inv_freq', 'model.layers.2.self_attn.rotary_emb.inv_freq', 'model.layers.16.self_attn.rotary_emb.inv_freq', 'model.layers.17.self_attn.rotary_emb.inv_freq', 'model.layers.27.self_attn.rotary_emb.inv_freq', 'model.layers.1.self_attn.rotary_emb.inv_freq', 'model.layers.18.self_attn.rotary_emb.inv_freq', 'model.layers.21.self_attn.rotary_emb.inv_freq', 'model.layers.14.self_attn.rotary_emb.inv_freq', 'model.layers.4.self_attn.rotary_emb.inv_freq', 'model.layers.24.self_attn.rotary_emb.inv_freq']
 You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
 /usr/local/lib/python3.10/dist-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
   warnings.warn(
-  0%|          | 0/20 [00:00<?, ?it/s]/usr/local/lib/python3.10/dist-packages/transformers/generation/utils.py:1270: UserWarning: You have modified the pretrained model configuration to control generation. This is a deprecated strategy to control generation and will be removed soon, in a future version. Please use a generation configuration file (see https://huggingface.co/docs/transformers/main_classes/text_generation )
+
+  0%|          | 0/20 [00:00<?, ?it/s]/usr/local/lib/python3.10/dist-packages/transformers/generation/utils.py:1270: UserWarning: You have modified the pretrained model configuration to control generation. This is a deprecated strategy to control generation and will be removed soon, in a future version. Please use a generation configuration file (see https://huggingface.co/docs/transformers/main_classes/text_generation )
   warnings.warn(
 ======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
@@ -62,7 +67,8 @@ test_17.py:4: AssertionError
 ===================================== short test summary info ======================================
 FAILED test_17.py::test_parse_music - assert [4, 2, 1, 2, 2, 1, ...] == [4, 2, 1, 2, 2, 1, ...]
 ======================================== 1 failed in 0.03s =========================================
-  5%|▌         | 1/20 [00:43<13:50, 43.70s/it]======================================= test session starts ========================================
+
+  5%|▌         | 1/20 [00:43<13:50, 43.70s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -81,7 +87,8 @@ test_53.py:2: NameError
 ===================================== short test summary info ======================================
 FAILED test_53.py::test_add - NameError: name 'add' is not defined
 ======================================== 1 failed in 0.03s =========================================
- 10%|█         | 2/20 [00:51<06:50, 22.78s/it]======================================= test session starts ========================================
+
+ 10%|█         | 2/20 [00:51<06:50, 22.78s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -103,7 +110,8 @@ Coverage JSON written to file 16_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 15%|█▌        | 3/20 [01:06<05:20, 18.88s/it]======================================= test session starts ========================================
+
+ 15%|█▌        | 3/20 [01:06<05:20, 18.88s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -125,7 +133,8 @@ Coverage JSON written to file 57_test.json
 
 
 ======================================== 3 passed in 0.03s =========================================
- 20%|██        | 4/20 [01:21<04:42, 17.66s/it]======================================= test session starts ========================================
+
+ 20%|██        | 4/20 [01:21<04:42, 17.66s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -147,7 +156,8 @@ Coverage JSON written to file 44_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 25%|██▌       | 5/20 [01:35<04:01, 16.12s/it]======================================= test session starts ========================================
+
+ 25%|██▌       | 5/20 [01:35<04:01, 16.12s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -222,7 +232,7 @@ def test_parse_music():
 This suite tests the `parse_music` function with various inputs to ensure it behaves as expected.
 
 coverage:
--1
+100.0
 An error occurred while running tests: Command 'pytest test_53.py' returned non-zero exit status 1.
 Task_ID HumanEval/53:
 prompt:
@@ -253,7 +263,7 @@ def test_add():
     assert add(100, 0) == 100
 
 coverage:
--1
+100.0
 Task_ID HumanEval/16:
 prompt:
 You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
@@ -382,7 +392,8 @@ Please replace 'your_module' with the actual module name where the `change_base`
 
 coverage:
 100.0
- 30%|███       | 6/20 [01:54<03:58, 17.03s/it]======================================= test session starts ========================================
+
+ 30%|███       | 6/20 [01:54<03:58, 17.03s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -404,7 +415,8 @@ Coverage JSON written to file 78_test.json
 
 
 ======================================== 1 passed in 0.03s =========================================
- 35%|███▌      | 7/20 [02:11<03:42, 17.08s/it]======================================= test session starts ========================================
+
+ 35%|███▌      | 7/20 [02:11<03:42, 17.08s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -426,7 +438,8 @@ Coverage JSON written to file 112_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 40%|████      | 8/20 [02:28<03:26, 17.22s/it]======================================= test session starts ========================================
+
+ 40%|████      | 8/20 [02:28<03:26, 17.22s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -448,7 +461,8 @@ Coverage JSON written to file 144_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 45%|████▌     | 9/20 [02:43<03:00, 16.42s/it]======================================= test session starts ========================================
+
+ 45%|████▌     | 9/20 [02:43<03:00, 16.42s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -679,7 +693,8 @@ You can run these tests using pytest. Make sure to replace 'your_module' with th
 
 coverage:
 100.0
- 50%|█████     | 10/20 [03:03<02:55, 17.51s/it]======================================= test session starts ========================================
+
+ 50%|█████     | 10/20 [03:03<02:55, 17.51s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -701,7 +716,8 @@ Coverage JSON written to file 96_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 55%|█████▌    | 11/20 [03:25<02:50, 19.00s/it]======================================= test session starts ========================================
+
+ 55%|█████▌    | 11/20 [03:25<02:50, 19.00s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -723,7 +739,8 @@ Coverage JSON written to file 101_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 60%|██████    | 12/20 [03:45<02:34, 19.37s/it]======================================= test session starts ========================================
+
+ 60%|██████    | 12/20 [03:45<02:34, 19.37s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -745,7 +762,8 @@ Coverage JSON written to file 52_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 65%|██████▌   | 13/20 [04:05<02:16, 19.51s/it]======================================= test session starts ========================================
+
+ 65%|██████▌   | 13/20 [04:05<02:16, 19.51s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -814,7 +832,7 @@ def test_order_by_points():
 Please replace 'your_module' with the actual module name where the `order_by_points` function is defined.
 
 coverage:
--1
+100.0
 Task_ID HumanEval/96:
 prompt:
 You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
@@ -966,7 +984,8 @@ This suite includes several tests to cover different scenarios. It checks whethe
 
 coverage:
 100.0
- 70%|███████   | 14/20 [04:23<01:53, 18.89s/it]======================================= test session starts ========================================
+
+ 70%|███████   | 14/20 [04:23<01:53, 18.89s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -988,7 +1007,8 @@ test_139.py:6: AssertionError
 ===================================== short test summary info ======================================
 FAILED test_139.py::test_special_factorial - assert 2 == 4
 ======================================== 1 failed in 0.03s =========================================
- 75%|███████▌  | 15/20 [04:39<01:30, 18.18s/it]======================================= test session starts ========================================
+
+ 75%|███████▌  | 15/20 [04:39<01:30, 18.18s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -1010,7 +1030,8 @@ Coverage JSON written to file 74_test.json
 
 
 ======================================== 1 passed in 0.03s =========================================
- 80%|████████  | 16/20 [05:02<01:17, 19.45s/it]======================================= test session starts ========================================
+
+ 80%|████████  | 16/20 [05:02<01:17, 19.45s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -1031,7 +1052,8 @@ test_85.py:5: AssertionError
 ===================================== short test summary info ======================================
 FAILED test_85.py::test_add - assert 6 == 4
 ======================================== 1 failed in 0.02s =========================================
- 85%|████████▌ | 17/20 [05:19<00:56, 18.72s/it]======================================= test session starts ========================================
+
+ 85%|████████▌ | 17/20 [05:19<00:56, 18.72s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -1053,7 +1075,8 @@ Coverage JSON written to file 51_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
- 90%|█████████ | 18/20 [05:37<00:37, 18.61s/it]======================================= test session starts ========================================
+
+ 90%|█████████ | 18/20 [05:37<00:37, 18.61s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -1167,7 +1190,7 @@ def test_special_factorial():
 This test suite includes unit tests for the special_factorial function. It tests the function with inputs of 0, 1, 2, 3, 4, and 5. The expected outputs are provided in the comments.
 
 coverage:
--1
+100.0
 Task_ID HumanEval/74:
 prompt:
 You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
@@ -1262,7 +1285,7 @@ def test_add():
 Please replace 'your_module' with the actual name of the module where the function is defined. The test cases are chosen to cover a variety of scenarios, including edge cases.
 
 coverage:
--1
+100.0
 Task_ID HumanEval/51:
 prompt:
 You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
@@ -1312,7 +1335,8 @@ Please replace 'your_module' with the actual module name where the `remove_vowel
 
 coverage:
 100.0
- 95%|█████████▌| 19/20 [05:56<00:18, 18.66s/it]======================================= test session starts ========================================
+
+ 95%|█████████▌| 19/20 [05:56<00:18, 18.66s/it]======================================= test session starts ========================================
 platform linux -- Python 3.10.12, pytest-7.4.4, pluggy-1.5.0
 rootdir: /content/Coverage/vanilla
 plugins: cov-5.0.0, typeguard-4.3.0, anyio-3.7.1
@@ -1334,7 +1358,9 @@ Coverage JSON written to file 49_test.json
 
 
 ======================================== 1 passed in 0.02s =========================================
-100%|██████████| 20/20 [06:11<00:00, 17.53s/it]100%|██████████| 20/20 [06:11<00:00, 18.56s/it]
+
+100%|██████████| 20/20 [06:11<00:00, 17.53s/it]
+100%|██████████| 20/20 [06:11<00:00, 18.56s/it]
 Task_ID HumanEval/11:
 prompt:
 You are an AI programming assistant. You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
