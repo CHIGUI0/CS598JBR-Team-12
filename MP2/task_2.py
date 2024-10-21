@@ -9,34 +9,17 @@ import os
 import json
 
 def run_pytest(file_path):
-    """运行pytest测试并根据结果生成覆盖率报告或返回错误标识"""
-    # 构建测试命令
-    test_command = f"pytest {file_path.replace('func', 'test')}.py"
     coverage_command = f"pytest --cov={file_path} --cov-report json:{file_path.replace('func_', '')}_test.json {file_path.replace('func', 'test')}.py"
-
-    # 执行pytest测试
+    
     try:
-        # 先运行基本的pytest测试，如果有错误直接返回-1
-        result = subprocess.run(test_command, shell=True, check=True)
-        # 如果pytest测试通过，则运行覆盖率测试
         coverage_result = subprocess.run(coverage_command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while running tests: {e}")
-        return -1  # 如果测试失败，则返回-1
-
-    # 如果测试成功，解析覆盖率报告
-    try:
-        with open(f"{file_path.replace('func_', '')}_test.json", "r") as f:
-            data = json.load(f)
-        covered = data["files"][f"{file_path}.py"]["summary"]["percent_covered"]
-        return covered
-    except FileNotFoundError:
-        print("Coverage report file not found.")
-        return -1
-    except KeyError:
-        print("Coverage data is incomplete or the format has changed.")
-        return -1
-
+    with open(f"{file_path.replace('func_', '')}_test.json", "r") as f:
+        data = json.load(f)
+    covered = data["files"][f"{file_path}.py"]["summary"]["percent_covered"]
+    return covered 
+    
 
 def clean_string(input_string, file_name):
     """
@@ -111,8 +94,87 @@ Generate a pytest test suite for the following code.
 Only write unit tests in the output and nothing else."""
             suffix = "### Response:"
         else:
-            prefix = ""
-            suffix = ""
+            prefix = """You are an AI programming assistant. You are an AI programming assistant, \
+utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you only answer questions related to computer science. \
+For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.
+
+## <Example Begin>
+### Instruction:
+Generate a pytest test suite for the following code, each with only one assert statement. You should generate more test cases to ensure 100% coverage. You should consider special cases and boundary conditions in the code to maximize the test coverage.
+
+def has_all_chars_even_count(input_string):
+    char_count = {}
+    for char in input_string:
+        if char in char_count:
+            char_count[char] += 1
+        else:
+            char_count[char] = 1
+
+    for count in char_count.values():
+        if count % 2 != 0:
+            return False
+    return True
+
+### Chain of Thought:
+1. **Understanding the Function Purpose**: The function `has_all_chars_even_count` checks if each character in the provided string appears an even number of times. The function proceeds in two main steps:
+   - It first counts occurrences of each character using a dictionary.
+   - It then checks if all counts are even numbers. If any count is odd, it returns `False`; otherwise, it returns `True`.
+
+2. **Identifying Key Functional Components**:
+   - The **dictionary update logic** in the loop `for char in input_string` needs to be tested for both situations where a character is already in the dictionary (incrementing the count) and where it's not (initializing the count).
+   - The **conditional check** for even or odd counts in `for count in char_count.values()` to ensure it correctly identifies even and odd values.
+
+3. **Designing Test Cases Based on Function Logic**:
+   - **Empty String**: Tests how the function handles an absence of data, which is a boundary condition. An empty string should return `True` since there are no characters to have an odd count.
+   - **Single Character Repeated Evenly/Oddly**: Verifies the dictionary counting mechanism and the even/odd evaluation logic separately by checking strings where only one type of character is repeated.
+   - **Multiple Characters with Even Counts**: Ensures that the function handles multiple types of characters correctly and that the counting and even check work across different characters.
+   - **Multiple Characters with at Least One Odd Count**: Checks the functionality when at least one character violates the even count condition.
+   - **Special Characters**: Confirms that the function correctly handles non-alphanumeric characters.
+   - **Case Sensitivity**: Validates that the function is sensitive to character case, as dictionary keys in Python are case-sensitive.
+
+4. **Considerations for Comprehensive Test Coverage**:
+   - **Various Lengths and Characters**: Testing strings of different lengths and different sets of characters ensures robustness.
+   - **Boundary Checks**: Testing the smallest non-empty strings (like a single character) and strings where the count transitions from even to odd with the addition of one character.
+
+By considering the function's mechanisms and designing tests around both expected behavior and edge cases, the test suite can effectively validate the correctness and robustness of the function.
+
+### Test Cases:
+
+import pytest
+from your_module import has_all_chars_even_count
+
+def test_empty_string():
+    assert has_all_chars_even_count("") == True
+
+def test_even_counts():
+    assert has_all_chars_even_count("aabbcc") == True
+
+def test_odd_counts():
+    assert has_all_chars_even_count("aabbc") == False
+
+def test_all_characters_same_even():
+    assert has_all_chars_even_count("aaaa") == True
+
+def test_all_characters_same_odd():
+    assert has_all_chars_even_count("aaa") == False
+
+def test_special_characters_even():
+    assert has_all_chars_even_count("@@$$^^") == True
+
+def test_mixed_case_characters():
+    assert has_all_chars_even_count("AaAa") == True
+
+def test_mixed_case_characters_odd():
+    assert has_all_chars_even_count("AaBbCcC") == False
+
+## <Example End>
+
+!!Now, you should follow the example above to complete the following function. Please output only Chain of Thought and Test Cases. Do not output <Example End>!!!!!!
+### Instruction:
+Generate a pytest test suite for the following code, each with only one assert statement. You should generate more test cases to ensure 100% coverage. You should consider special cases and boundary conditions in the code to maximize the test coverage. 
+
+"""
+            suffix = "### Chain of Thought:"
         func = entry["prompt"] + "\n" + entry["canonical_solution"]
 
         prompt = f"{prefix}\n{func}\n{suffix}"

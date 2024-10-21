@@ -1,3 +1,7 @@
 Tools.ipynb
 .DS_Store
 MP2/Coverage/vanilla/__pycache__
+
+.coverage
+__pycache__
+.pytest_cache
