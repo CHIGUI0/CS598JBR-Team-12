@@ -40,9 +40,9 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
         Instruction = "### Instruction:\n"
         Instruction_crafted = "\nYou are given a Python function, and the docstring contains the function's functional specification and examples of input and output. You should step by step check whether the function successfully implements the functional specification. If not, it is considered buggy. Then you can also use the examples in the docstring to verify the correctness of the implementation.\nThe prediction should be enclosed within <start> and <end> tags, such as <start>Buggy<end> and <start>Correct<end>. Here is an example:\n"
         Question = "Is the above code buggy or correct? Please explain your step by step reasoning. The prediction should be enclosed within <start> and <end> tags. For example: <start>Buggy<end>\n"
-        Example = "### Example:\nIs the following code buggy or correct? Format the prediction as <start>prediction<end>, such as <start>Buggy<end>!\ndef odd_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the odd digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(1, 5) => [1, 3, 5]\n    \"\"\"\n    lower = max(1, min(a, b))\n    upper = min(9, max(a, b))\n\n    return [i for i in range(lower, upper) if i % 2 == 1]\n"
-        Example_res = "### Response:\nLet's reason step by step.\n1. Within the function, lower and upper correctly calculates the lower and upper bound.\n2. When looking for odd numbers in range(lower, upper), the right endpoint does not include upper, which causes an error. Therefore the prediction is: <start>Buggy<end>.\n"
-        NewProblem = '### New Problem:\nIs the following code buggy or correct? Format the prediction as <start>prediction<end>, such as <start>Buggy<end>!\n'
+        Example = "### Example:\nIs the following code buggy or correct? Format the prediction as <start>prediction<end>, such as <start>Buggy<end>!\ndef odd_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the odd digits between a\n    and b, in ascending order.\n\n    For example:\n    odd_integers(1, 5) => [1, 3, 5]\n    \"\"\"\n    lower = max(1, min(a, b))\n    upper = min(9, max(a, b))\n\n    return [i for i in range(lower, upper) if i % 2 == 1]\n"
+        Example_res = "### Response:\nLet's reason step by step.\n1. check the example in the docstring: odd_integers(1, 5) => [1, 3, 5].\n2. The reasoning output is [1, 3], rather than [1, 3, 5]. Therefore the prediction is: <start>Buggy<end>.\n"
+        NewProblem = '### New Problem:\nIs the following code buggy or correct? You should test all example in the comment, if any of them are incorrect, it is buggy. Format the prediction as <start>prediction<end>, such as <start>Buggy<end>!\n'
         if vanilla:
             prompt = prefix + Instruction + entry['declaration'] + entry['buggy_solution'] + Question + "### Response:"
         else:
@@ -54,7 +54,7 @@ def prompt_model(dataset, model_name = "deepseek-ai/deepseek-coder-6.7b-instruct
         response = tokenizer.decode(output[0], skip_special_tokens=True, temperature=0)
 
         # TODO: process the response and save it to results
-        pos = response.find('### Response:')
+        pos = response.rfind('### Response:')
         if pos == -1:  # If 'strb' is not found
             extraresponse = ""
         else:
